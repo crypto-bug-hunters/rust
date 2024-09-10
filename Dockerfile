@@ -66,9 +66,9 @@ ENV CARGO_HOME=${HOME}/.cargo
 ENV PATH=${CARGO_HOME}/bin:${PATH}
 
 RUN cd  && \
-    wget https://github.com/rust-lang/rustup/archive/refs/tags/${RUSTUP_VERSION}.tar.gz && \
-    echo "f5ba37f2ba68efec101198dca1585e6e7dd7640ca9c526441b729a79062d3b77  ${RUSTUP_VERSION}.tar.gz" | sha256sum --check && \
-    tar -xzf ${RUSTUP_VERSION}.tar.gz && \
+    wget -O rustup-${RUSTUP_VERSION}.tar.gz https://github.com/rust-lang/rustup/archive/refs/tags/${RUSTUP_VERSION}.tar.gz && \
+    echo "f5ba37f2ba68efec101198dca1585e6e7dd7640ca9c526441b729a79062d3b77  rustup-${RUSTUP_VERSION}.tar.gz" | sha256sum --check && \
+    tar -xzf rustup-${RUSTUP_VERSION}.tar.gz && \
     bash rustup-${RUSTUP_VERSION}/rustup-init.sh \
         -y \
         --default-toolchain ${RUST_TOOLCHAIN_VERSION} \
