@@ -64,6 +64,7 @@ ENV RUSTUP_VERSION=1.27.1
 ENV RUST_TOOLCHAIN_VERSION=1.80.1
 ENV CARGO_HOME=/opt/.cargo
 ENV PATH=${CARGO_HOME}/bin:${PATH}
+ENV CARGO_TARGET=riscv64gc-unknown-linux-gnu
 
 RUN cd  && \
     wget -O rustup-${RUSTUP_VERSION}.tar.gz https://github.com/rust-lang/rustup/archive/refs/tags/${RUSTUP_VERSION}.tar.gz && \
@@ -73,6 +74,6 @@ RUN cd  && \
         -y \
         --default-toolchain ${RUST_TOOLCHAIN_VERSION} \
         --profile minimal \
-        --target riscv64gc-unknown-linux-gnu && \
-    printf '[target.riscv64gc-unknown-linux-gnu]\nlinker = "riscv64-linux-gnu-gcc"\n' >> ${CARGO_HOME}/config.toml \
+        --target ${CARGO_TARGET} && \
+    printf '[target.%s]\nlinker = "riscv64-linux-gnu-gcc"\n' ${CARGO_TARGET} >> ${CARGO_HOME}/config.toml \
     rm -rf rustup-${RUSTUP_VERSION} ${RUSTUP_VERSION}.tar.gz
