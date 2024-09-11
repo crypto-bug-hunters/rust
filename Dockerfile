@@ -66,14 +66,16 @@ ENV CARGO_HOME=/opt/.cargo
 ENV PATH=${CARGO_HOME}/bin:${PATH}
 ENV CARGO_TARGET=riscv64gc-unknown-linux-gnu
 
-RUN cd  && \
-    wget -O rustup-${RUSTUP_VERSION}.tar.gz https://github.com/rust-lang/rustup/archive/refs/tags/${RUSTUP_VERSION}.tar.gz && \
-    echo "f5ba37f2ba68efec101198dca1585e6e7dd7640ca9c526441b729a79062d3b77  rustup-${RUSTUP_VERSION}.tar.gz" | sha256sum --check && \
-    tar -xzf rustup-${RUSTUP_VERSION}.tar.gz && \
-    bash rustup-${RUSTUP_VERSION}/rustup-init.sh \
-        -y \
-        --default-toolchain ${RUST_TOOLCHAIN_VERSION} \
-        --profile minimal \
-        --target ${CARGO_TARGET} && \
-    printf '[target.%s]\nlinker = "riscv64-linux-gnu-gcc"\n' ${CARGO_TARGET} >> ${CARGO_HOME}/config.toml \
-    rm -rf rustup-${RUSTUP_VERSION} ${RUSTUP_VERSION}.tar.gz
+RUN <<EOF
+set -eu
+wget -O rustup-${RUSTUP_VERSION}.tar.gz https://github.com/rust-lang/rustup/archive/refs/tags/${RUSTUP_VERSION}.tar.gz
+echo "f5ba37f2ba68efec101198dca1585e6e7dd7640ca9c526441b729a79062d3b77  rustup-${RUSTUP_VERSION}.tar.gz" | sha256sum --check
+tar xf rustup-${RUSTUP_VERSION}.tar.gz
+bash rustup-${RUSTUP_VERSION}/rustup-init.sh \
+    -y \
+    --default-toolchain ${RUST_TOOLCHAIN_VERSION} \
+    --profile minimal \
+    --target ${CARGO_TARGET}
+printf '[target.%s]\nlinker = "riscv64-linux-gnu-gcc"\n' ${CARGO_TARGET} >> ${CARGO_HOME}/config.toml
+rm -rf rustup-${RUSTUP_VERSION} rustup-${RUSTUP_VERSION}.tar.gz
+EOF
